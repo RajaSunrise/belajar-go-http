@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Tugas</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Daftar Tugas (Todos)</h1>
+        <p>Ini adalah contoh halaman yang di-render oleh server Go.</p>
+
+        {{if .Todos}}
+            <ul class="todo-list">
+                {{range .Todos}}
+                    <li class="{{if .Completed}}completed{{end}}">
+                        <span class="task">{{.Task}}</span>
+                        <span class="status">{{if .Completed}}(Selesai){{else}}(Belum Selesai){{end}}</span>
+                    </li>
+                {{end}}
+            </ul>
+        {{else}}
+            <p class="no-todos">Belum ada tugas. Coba buat beberapa melalui API!</p>
+        {{end}}
+
+        <div class="footer">
+            <p>Untuk memanipulasi data (membuat, mengubah, menghapus), gunakan <a href="/#api-endpoints">API endpoints</a>.</p>
+        </div>
+    </div>
+
+</body>
+</html>
