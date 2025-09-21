@@ -14,6 +14,8 @@ Repositori ini berisi kode untuk **API CRUD (Create, Read, Update, Delete) Todo*
 - **Struktur Proyek yang Baik**: Mengikuti praktik terbaik untuk struktur proyek Go yang skalabel (`cmd`, `internal`).
 - **Graceful Shutdown**: Implementasi shutdown yang aman untuk memastikan tidak ada request yang terputus saat server dimatikan.
 - **Tanpa Database Eksternal**: Menggunakan penyimpanan di memori (*in-memory store*) agar mudah dijalankan tanpa perlu setup database.
+- **Web Interface Sederhana**: Menampilkan daftar tugas dalam format HTML yang di-render oleh server.
+- **Penyajian File Statis**: Contoh menyajikan file CSS statis.
 
 ## 🚀 Memulai
 
@@ -44,39 +46,47 @@ Repositori ini berisi kode untuk **API CRUD (Create, Read, Update, Delete) Todo*
     Server starting on port :8080
     ```
 
-##  API Endpoints
+## 🖥️ Antarmuka Web (Web Interface)
 
-Anda bisa menggunakan `curl`, Postman, atau Insomnia untuk berinteraksi dengan API.
+Selain menyediakan API, proyek ini sekarang juga memiliki antarmuka web sederhana untuk menampilkan daftar tugas.
+
+- **Buka browser Anda dan kunjungi:** `http://localhost:8080`
+
+Anda akan melihat halaman yang menampilkan semua tugas yang ada saat ini. Halaman ini di-render di sisi server menggunakan paket `html/template` Go.
+
+## ⚙️ API Endpoints
+
+Semua endpoint API sekarang berada di bawah prefix `/api`. Anda bisa menggunakan `curl`, Postman, atau Insomnia untuk berinteraksi dengan API.
 
 | Metode | Endpoint          | Deskripsi                    | Contoh Body Request                               |
 | :------- | :---------------- | :--------------------------- | :------------------------------------------------ |
-| `GET`    | `/todos`          | Mendapatkan semua tugas      | -                                                 |
-| `POST`   | `/todos`          | Membuat tugas baru           | `{"task": "Belajar Go net/http"}`                 |
-| `GET`    | `/todos/{id}`     | Mendapatkan satu tugas       | -                                                 |
-| `PUT`    | `/todos/{id}`     | Memperbarui tugas            | `{"task": "Selesai belajar", "completed": true}` |
-| `DELETE` | `/todos/{id}`     | Menghapus tugas              | -                                                 |
+| `GET`    | `/api/todos`      | Mendapatkan semua tugas      | -                                                 |
+| `POST`   | `/api/todos`      | Membuat tugas baru           | `{"task": "Belajar Go net/http"}`                 |
+| `GET`    | `/api/todos/{id}` | Mendapatkan satu tugas       | -                                                 |
+| `PUT`    | `/api/todos/{id}` | Memperbarui tugas            | `{"task": "Selesai belajar", "completed": true}` |
+| `DELETE` | `/api/todos/{id}` | Menghapus tugas              | -                                                 |
 
 ### Contoh Penggunaan dengan `curl`
 
 - **Membuat tugas baru:**
   ```sh
-  curl -X POST -H "Content-Type: application/json" -d '{"task": "Membaca TUTORIAL.md"}' http://localhost:8080/todos
+  curl -X POST -H "Content-Type: application/json" -d '{"task": "Membaca TUTORIAL.md"}' http://localhost:8080/api/todos
   ```
   *(Respons akan berisi tugas yang baru dibuat beserta ID-nya)*
 
 - **Melihat semua tugas:**
   ```sh
-  curl http://localhost:8080/todos
+  curl http://localhost:8080/api/todos
   ```
 
 - **Memperbarui tugas dengan ID 1:**
   ```sh
-  curl -X PUT -H "Content-Type: application/json" -d '{"task": "Selesai membaca TUTORIAL.md", "completed": true}' http://localhost:8080/todos/1
+  curl -X PUT -H "Content-Type: application/json" -d '{"task": "Selesai membaca TUTORIAL.md", "completed": true}' http://localhost:8080/api/todos/1
   ```
 
 - **Menghapus tugas dengan ID 1:**
   ```sh
-  curl -X DELETE http://localhost:8080/todos/1
+  curl -X DELETE http://localhost:8080/api/todos/1
   ```
 
 ## 📂 Struktur Proyek
@@ -87,14 +97,21 @@ Anda bisa menggunakan `curl`, Postman, atau Insomnia untuk berinteraksi dengan A
 │   └── main.go         # Titik masuk aplikasi, setup server, graceful shutdown.
 ├── internal/
 │   ├── handler/
-│   │   ├── todo.go     # Handler HTTP untuk setiap endpoint.
-│   │   └── routes.go   # Definisi semua rute API menggunakan `chi`.
+│   │   ├── todo.go     # Handler HTTP untuk endpoint API.
+│   │   ├── web.go      # Handler untuk me-render halaman web HTML.
+│   │   └── routes.go   # Definisi semua rute (API & Web) menggunakan `chi`.
 │   └── model/
-│       └── todo.go     # Definisi struct `Todo` dan logika penyimpanan data (in-memory store).
+│       └── todo.go     # Definisi struct `Todo` dan logika penyimpanan data.
+├── ui/
+│   ├── html/
+│   │   └── todos.html  # Template HTML untuk halaman web.
+│   └── static/
+│       └── css/
+│           └── style.css # File CSS untuk styling.
 ├── go.mod              # Definisi modul Go dan dependensi.
 ├── go.sum              # Checksum dari dependensi.
 ├── README.md           # File ini.
-└── TUTORIAL.md         # Panduan lengkap dan mendalam tentang `net/http` (sumber dari proyek ini).
+└── TUTORIAL.md         # Panduan lengkap dan mendalam tentang `net/http`.
 ```
 
 ## 📚 Belajar Lebih Lanjut
